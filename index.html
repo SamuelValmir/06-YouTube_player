@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./styles/style.css">
     <!-- This is to solve the fivecon.ico error showed in console  -->
     <link rel="shortcut icon" href="#">
-    <script src="./script.js"></script>
+    <script src="./scripts/script.js"></script>
     <title>Document</title>
 </head>
 
@@ -21,7 +21,7 @@
     <!-- If preload is used with autoplay, preload it'll be ignored -->
 
     <div class="container">
-        <video id="videoId" preload="auto" src="./assets//videos/Bring sally up.mp4" poster="./archive.png"
+        <video id="video" preload="auto" src="./assets/videos/Bring sally up.mp4" poster="./assets/covers/cover.png"
             onclick="playVideo()"></video>
 
         <div class="controls">
@@ -30,6 +30,7 @@
                     title="Play (k)">
                 <img id="mute_button" class="btn" src="./assets/icons/round_volume_up_black.png" onclick="muteVideo()"
                     title="Mute (m)">
+                    <input class="volume_slider" type="range" min="0" max="1" step="0.1" value="1" oninput="onSliderInputted()">
             </div>
 
             <div class="right-controls">
