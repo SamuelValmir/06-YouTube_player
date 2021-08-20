@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <!-- This is to solve the fivecon.ico error showed in console  -->
+    <link rel="shortcut icon" href="#">
+    <script src="./script.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- In some browsers the autoplay only works if the sound is muted-->
+    <!-- preload -> auto, metadata and none
+        auto - After screen loads, the video will start load on browser's memory (When user press play button it'll be some part of the video loaded to see)
+        metadata - After screen loads, the video will load some video's properties like size, name(metadata)
+        none - Video don't load after screen loads/only loads when user press play
+    -->
+    <!-- If preload is used with autoplay, preload it'll be ignored -->
+
+    <div class="container">
+        <video id="videoId" preload="auto" src="./assets//videos/Bring sally up.mp4" poster="./archive.png"
+            onclick="playVideo()"></video>
+
+        <div class="controls">
+            <div class="left-controls">
+                <img id="play_button" class="btn" src="./assets/icons/round_play_arrow_black.png" onclick="playVideo()"
+                    title="Play (k)">
+                <img id="mute_button" class="btn" src="./assets/icons/round_volume_up_black.png" onclick="muteVideo()"
+                    title="Mute (m)">
+            </div>
+
+            <div class="right-controls">
+                <img class="btn" id="autoplayImg" src="./assets/icons/round_play_circle_filled_black.png" title="Auto play off"
+                    onclick="setAutoPlay()">
+                <img class="btn" src="./assets/icons/round_settings_black.png" title="Settings (s)">
+                <img class="btn" src="./assets/icons/round_branding_watermark_black.png" title="Mini player (i)">
+                <img class="btn" id="theater" theaterMode=false  src="./assets/icons/round_crop_landscape_black.png" title="Theater mode (t)" onclick="setTheater()">
+                <img class="btn" id="full_screen" fullScreenMode=false src="./assets/icons/round_fullscreen_black.png" title="Full screen (f)" onclick="setFullScreen()">
+            </div>
+        </div>
+
+        <div class="properties">
+            Playing: <span id="playing"></span> <br>
+            Volume: <span id="volume"></span> <br>
+            Muted: <span id="muted"></span> <br>
+            Autoplay: <span id="autoplay"></span> <br>
+        </div>
+    </div>
+</body>
+
+</html>

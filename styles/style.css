@@ -1,0 +1,59 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html{
+    height: 100%;
+}
+.container{
+    width: 64%;
+    height: 36vw;
+
+    position: relative;
+}
+
+#videoId{
+    width: 100%;
+    height: 100%;
+
+    border: 2px solid #BBB;
+}
+
+img{
+    width: 30px;
+    filter: invert(100%);
+}
+
+.controls{
+    background-color: #000;
+    width: 100%;
+    height: fit-content;
+    
+    position: absolute;
+    opacity: 0%;
+    top: 100%;
+    transform: translateY(-100%);
+}
+
+.left-controls{
+    display: inline-block;
+}
+
+
+.right-controls{
+    display: inline-block;
+    position: absolute;
+    right: 0;
+}
+
+/* Hovers */
+.container:hover .controls{
+    cursor: pointer;
+    opacity: 30%;
+}
+
+img:hover{
+    cursor: pointer;
+}
