@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="./styles/style.css">
     <!-- This is to solve the fivecon.ico error showed in console  -->
     <link rel="shortcut icon" href="#">
-    <script src="./scripts/script.js"></script>
     <title>Document</title>
 </head>
 
@@ -22,7 +21,7 @@
 
     <div class="container">
         <video id="video" preload="auto" src="./assets/videos/Bring sally up.mp4" poster="./assets/covers/cover.png"
-            onclick="playVideo()"></video>
+            onclick="playVideo()" ontimeupdate="timeupdate()"></video>
 
         <div class="controls">
             <div class="left-controls">
@@ -30,16 +29,24 @@
                     title="Play (k)">
                 <img id="mute_button" class="btn" src="./assets/icons/round_volume_up_black.png" onclick="muteVideo()"
                     title="Mute (m)">
-                    <input class="volume_slider" type="range" min="0" max="1" step="0.1" value="1" oninput="onSliderInputted()">
+                <input class="volume_slider" type="range" min="0" max="1" step="0.1" value="1"
+                    oninput="onSliderInputted()">
+                <div class="time_container">
+                    <span class="time current_time">00:00:00</span>
+                    <span class="time">/</span>
+                    <span class="time duration_time">00:00:00</span>
+                </div>
             </div>
 
             <div class="right-controls">
-                <img class="btn" id="autoplayImg" src="./assets/icons/round_play_circle_filled_black.png" title="Auto play off"
-                    onclick="setAutoPlay()">
+                <img class="btn" id="autoplayImg" src="./assets/icons/round_play_circle_filled_black.png"
+                    title="Auto play off" onclick="setAutoPlay()">
                 <img class="btn" src="./assets/icons/round_settings_black.png" title="Settings (s)">
                 <img class="btn" src="./assets/icons/round_branding_watermark_black.png" title="Mini player (i)">
-                <img class="btn" id="theater" theaterMode=false  src="./assets/icons/round_crop_landscape_black.png" title="Theater mode (t)" onclick="setTheater()">
-                <img class="btn" id="full_screen" fullScreenMode=false src="./assets/icons/round_fullscreen_black.png" title="Full screen (f)" onclick="setFullScreen()">
+                <img class="btn" id="theater" theaterMode=false src="./assets/icons/round_crop_landscape_black.png"
+                    title="Theater mode (t)" onclick="setTheater()">
+                <img class="btn" id="full_screen" fullScreenMode=false src="./assets/icons/round_fullscreen_black.png"
+                    title="Full screen (f)" onclick="setFullScreen()">
             </div>
         </div>
 
@@ -50,6 +57,8 @@
             Autoplay: <span id="autoplay"></span> <br>
         </div>
     </div>
+
+    <script src="./scripts/script.js"></script>
 </body>
 
 </html>

@@ -49,6 +49,18 @@ img{
     transform: translateY(-50%);
 }
 
+.time_container{
+    display: inline-block;
+    position: absolute;
+    left: 140px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.time{
+    color: white;    
+}
+
 .volume_slider::-webkit-slider-thumb{
     -webkit-appearance: none;
     appearance: none;

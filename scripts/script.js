@@ -12,6 +12,7 @@ window.onload = function () {
     setProperties();
 }
 
+
 function setProperties() { //Fill or change the div properties values
 
 
@@ -33,6 +34,30 @@ function setProperties() { //Fill or change the div properties values
 function onSliderInputted() {
     video.volume = volumeSlider.value;
     setProperties();
+}
+
+function timeupdate(){
+    let currentTimeText = document.getElementsByClassName("current_time")[0];
+    let currentTimeVideo = video.currentTime.toFixed(0);
+
+    // let hours = (currentTimeVideo % (3600 * 60) / 3600).toFixed(0);
+
+    let minutes = Math.floor((currentTimeVideo / 60) % 60);
+    let seconds = (currentTimeVideo % 60).toFixed(0);
+    let formattedTimeText;
+
+    if (seconds < 10){
+        seconds = "0" + seconds;
+    }
+    if (minutes < 10){
+        minutes = "0" + minutes;
+    }
+
+    formattedTimeText = minutes + ":" + seconds;
+
+    currentTimeText.innerHTML = formattedTimeText;
+    // currentTimeText.innerHTML =
+
 }
 
 function playVideo() { //Play or pause the video
