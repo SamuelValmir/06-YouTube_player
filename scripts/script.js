@@ -1,14 +1,17 @@
 var defaultScreen = 16 / 9;
 var video;
 var volumeSlider;
-
-var autoplayImage;
+var loopImage;
+var progressBar;
 
 window.onload = function () {
     //Inicialize the variables
     video = document.getElementById("video");
-    volumeSlider = document.getElementsByClassName("volume_slider")[0];
-    autoplayImage = document.getElementById("autoplayImg");
+    volumeSlider = document.getElementsByClassName("volume-slider")[0];
+    loopImage = document.getElementById("loopImg");
+    progressBar = document.getElementById("progress_bar");
+    progressBar.value = video.currentTime;
+    progressBar.max = video.duration;
     setProperties();
 }
 
@@ -18,7 +21,13 @@ function setProperties() { //Fill or change the div properties values
 
     document.getElementById("volume").innerHTML = video.volume;
     document.getElementById("muted").innerHTML = video.muted;
-    document.getElementById("autoplay").innerHTML = video.autoplay;
+    document.getElementById("loop").innerHTML = video.loop;
+
+    let minutes = Math.floor(video.duration / 60);
+    let seconds = Math.floor(video.duration % 60);
+    if (minutes < 10) { minutes = "0" + minutes; }
+    if (seconds < 10) { seconds = "0" + seconds; }
+    document.getElementsByClassName("duration-time")[0].innerHTML = minutes + ":" + seconds;
     let playButtonImageSrc = document.getElementById("play_button").src;
 
     //If there is pause inside image button src ...
@@ -31,33 +40,37 @@ function setProperties() { //Fill or change the div properties values
     }
 }
 
-function onSliderInputted() {
+function onProgressSliderInputted() { // Change the video's current time by dragging the progress bar
+    video.currentTime = progressBar.value;
+    setProperties();
+}
+
+function onVolumeSliderInputted() { // Change the video's volume by dragging the volume slider
     video.volume = volumeSlider.value;
     setProperties();
 }
 
-function timeupdate(){
-    let currentTimeText = document.getElementsByClassName("current_time")[0];
+function timeupdate() { // While the video is playing show current time 
+    let currentTimeText = document.getElementsByClassName("current-time")[0];
     let currentTimeVideo = video.currentTime.toFixed(0);
-
+    progressBar.value = currentTimeVideo;
     // let hours = (currentTimeVideo % (3600 * 60) / 3600).toFixed(0);
+
 
     let minutes = Math.floor((currentTimeVideo / 60) % 60);
     let seconds = (currentTimeVideo % 60).toFixed(0);
     let formattedTimeText;
 
-    if (seconds < 10){
+    if (seconds < 10) {
         seconds = "0" + seconds;
     }
-    if (minutes < 10){
+    if (minutes < 10) {
         minutes = "0" + minutes;
     }
 
     formattedTimeText = minutes + ":" + seconds;
 
     currentTimeText.innerHTML = formattedTimeText;
-    // currentTimeText.innerHTML =
-
 }
 
 function playVideo() { //Play or pause the video
@@ -145,40 +158,41 @@ function setVolumeRangeByVolumeMuted(isVideoMuted) {
 
 window.onkeydown = function () { //Depending to which key was pressed down, it'll control different properties of the video.
     const keyDown = event.keyCode;
-    // alert(keyDown)
+    //alert(keyDown)
     switch (keyDown) {
-        case 32: playVideo(); // When "K" is pressed
+        case 32: playVideo(); // Case "K" is pressed
             break;
-        case 75: playVideo(); // When Space bar is pressed
+        case 75: playVideo(); // Case Space bar is pressed
             break;
-        case 37: video.currentTime -= 5; //When Arrow left is pressed
+        case 37: video.currentTime -= 5; // Case Arrow left is pressed
             break;
-        case 39: video.currentTime += 5; //When Arrow right is pressed
+        case 39: video.currentTime += 5; // Case Arrow right is pressed
             break;
-        case 38: adjustVolume("up"); //When Arrow up is pressed
+        case 38: adjustVolume("up"); // Case Arrow up is pressed
             break;
-        case 40: adjustVolume("down"); //When Arrow down is pressed
+        case 40: adjustVolume("down"); // Case Arrow down is pressed
             break;
-        case 65: setAutoPlay(); //When "A" is pressed
+        case 65: setLoop(); // Case "A" is pressed
             break;
-        case 70: setFullScreen(); //When "F" is pressed
+        case 70: setFullScreen(); // Case "F" is pressed
             break;
-        case 77: muteVideo(); //When "M" is pressed
+        case 77: muteVideo(); // Case "M" is pressed
+            break;
+        case 27: // Case "Esc" is pressed
             break;
     }
 };
 
-function setAutoPlay() {
-
-    // If video autoplay is true ...
-    if (video.autoplay) { // ...make it false, change autoplay image and it's title.
-        video.autoplay = false;
-        autoplayImage.src = "./assets/icons/round_play_circle_filled_black.png";
-        autoplayImage.title = "Auto play off (a)";
-    } else { // ...make it true, change autoplay image and it's title.
-        video.autoplay = true;
-        autoplayImage.src = "./assets/icons/round_pause_circle_filled_black.png";
-        autoplayImage.title = "Auto play on (a)";
+function setLoop() { //Turn on or turn off the video's loop
+    // If video loop is true ...
+    if (video.loop == true) { // ...make it false, change loop image and it's title.
+        video.loop = false;
+        loopImage.src = "./assets/icons/round_play_circle_filled_black.png";
+        loopImage.title = "Loop off (a)";
+    } else { // ...make it true, change loop image and it's title.
+        video.loop = true;
+        loopImage.src = "./assets/icons/round_pause_circle_filled_black.png";
+        loopImage.title = "Loop on (a)";
     }
     setProperties();
 }
