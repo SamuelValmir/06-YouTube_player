@@ -21,7 +21,7 @@
 
     <div class="container">
         <video id="video" preload="auto" src="./assets/videos/Bring sally up.mp4" poster="./assets/covers/cover.png"
-            onclick="playVideo()" ontimeupdate="timeupdate()"></video>
+            onclick="playVideo()" ontimeupdate="timeupdate()" onloadeddata="onVideoLoad()"></video>
 
         <div class="controls">
             <div class="top-controls">
@@ -52,7 +52,7 @@
 
                 <img class="btn" src="./assets/icons/round_settings_black.png" title="Settings (s)">
 
-                <img class="btn" src="./assets/icons/round_branding_watermark_black.png" title="Mini player (i)">
+                <img class="btn mini-player" src="./assets/icons/round_branding_watermark_black.png" title="Mini player (i)" onclick="setMiniScreen()">
 
                 <img class="btn" id="theater" theaterMode=false src="./assets/icons/round_crop_landscape_black.png"
                     title="Theater mode (t)" onclick="setTheater()">
@@ -63,6 +63,7 @@
         </div>
 
         <div class="properties">
+            <h3>Properties</h3>
             Playing: <span id="playing"></span> <br>
             Volume: <span id="volume"></span> <br>
             Muted: <span id="muted"></span> <br>

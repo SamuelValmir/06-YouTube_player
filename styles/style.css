@@ -1,4 +1,4 @@
-*{
+*:not(body){
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -66,16 +66,6 @@ img{
     color: white;    
 }
 
-.volume-slider::-webkit-slider-thumb{
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-.volume-slider::-moz-range-thumb{
-    -moz-appearance: none;
-}
-
-
 .right-controls{
     display: inline-block;
     position: absolute;
@@ -94,4 +84,18 @@ img:hover{
 
 .volume-slider:hover{
     cursor: pointer;
+}
+
+
+.properties{
+    background-color: #DDD;
+    border: 1px solid;
+    border-radius: 4px;
+    width: fit-content;
+    padding: 5px;
+}
+
+.properties h3{
+    text-align: center;
+    padding-bottom: 10px;
 }

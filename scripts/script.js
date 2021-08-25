@@ -3,6 +3,7 @@ var video;
 var volumeSlider;
 var loopImage;
 var progressBar;
+let theaterImage;
 
 window.onload = function () {
     //Inicialize the variables
@@ -12,22 +13,24 @@ window.onload = function () {
     progressBar = document.getElementById("progress_bar");
     progressBar.value = video.currentTime;
     progressBar.max = video.duration;
+    theaterImage = document.getElementById("theater");
     setProperties();
 }
 
-
-function setProperties() { //Fill or change the div properties values
-
-
-    document.getElementById("volume").innerHTML = video.volume;
-    document.getElementById("muted").innerHTML = video.muted;
-    document.getElementById("loop").innerHTML = video.loop;
-
+// On video loaded set a value for the duration time span tag
+function onVideoLoad(){
     let minutes = Math.floor(video.duration / 60);
     let seconds = Math.floor(video.duration % 60);
     if (minutes < 10) { minutes = "0" + minutes; }
     if (seconds < 10) { seconds = "0" + seconds; }
     document.getElementsByClassName("duration-time")[0].innerHTML = minutes + ":" + seconds;
+}
+
+function setProperties() { //Fill or change the div properties values
+    document.getElementById("volume").innerHTML = video.volume;
+    document.getElementById("muted").innerHTML = video.muted;
+    document.getElementById("loop").innerHTML = video.loop;
+
     let playButtonImageSrc = document.getElementById("play_button").src;
 
     //If there is pause inside image button src ...
@@ -197,9 +200,12 @@ function setLoop() { //Turn on or turn off the video's loop
     setProperties();
 }
 
+function setMiniPlayer() {
+
+}
+
 function setTheater() { // Turn in or out in theater mode
     let container = document.getElementsByClassName("container")[0];
-    let theaterImage = document.getElementById("theater");
     let isTheater = theaterImage.getAttribute("theaterMode");
 
     if (isTheater == "true") {
@@ -220,14 +226,31 @@ function setFullScreen() { // Turn in or out in full screen mode
     let container = document.getElementsByClassName("container")[0];
     let fullScreenImage = document.getElementById("full_screen");
     let isFullScreen = fullScreenImage.getAttribute("fullScreenMode");
+    let miniPlayerImage = document.getElementsByClassName("mini-player")[0];
 
     if (isFullScreen == "true") {
+
+        miniPlayerImage.style.display = "initial";
+        theaterImage.style.display = "initial";
         fullScreenImage.setAttribute("fullScreenMode", false);
         container.style.width = "64%";
         container.style.height = "36vw";
         fullScreenImage.src = "./assets/icons/round_fullscreen_exit_black.png"
 
     } else if (isFullScreen == "false") {
+        let isTheater = theaterImage.getAttribute("theaterMode");
+        if (isMiniPlayer == "true") {
+            theaterImage.setAttribute("theaterMode", false);
+            theaterImage.src = "./assets/icons/round_crop_landscape_black.png"
+        }
+        
+        if (isTheater == "true") {
+            theaterImage.setAttribute("theaterMode", false);
+            theaterImage.src = "./assets/icons/round_crop_landscape_black.png"
+        }
+        
+        miniPlayerImage.style.display = "none";
+        theaterImage.style.display = "none";
         fullScreenImage.setAttribute("fullScreenMode", true);
         container.style.width = "100%";
         container.style.height = "100%";
