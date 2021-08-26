@@ -3,7 +3,17 @@ var video;
 var volumeSlider;
 var loopImage;
 var progressBar;
-let theaterImage;
+
+var container;
+
+var miniPlayerImage;
+var isMiniScreen;
+
+var theaterImage;
+var isTheater;
+
+var fullScreenImage;
+var isFullScreen;
 
 window.onload = function () {
     //Inicialize the variables
@@ -13,12 +23,24 @@ window.onload = function () {
     progressBar = document.getElementById("progress_bar");
     progressBar.value = video.currentTime;
     progressBar.max = video.duration;
+    
+    
+    container = document.getElementsByClassName("container")[0];
+    
+    miniPlayerImage = document.getElementsByClassName("mini-player")[0];
+    isMiniScreen = miniPlayerImage.getAttribute("miniScreenMone");
+    
     theaterImage = document.getElementById("theater");
+    isTheater = theaterImage.getAttribute("theaterMode");
+    
+    fullScreenImage = document.getElementById("full_screen");
+    isFullScreen = fullScreenImage.getAttribute("fullScreenMode");
+
     setProperties();
 }
 
-// On video loaded set a value for the duration time span tag
-function onVideoLoad(){
+// On video loaded format and set a value for the duration time span tag
+function onVideoLoad() {
     let minutes = Math.floor(video.duration / 60);
     let seconds = Math.floor(video.duration % 60);
     if (minutes < 10) { minutes = "0" + minutes; }
@@ -200,60 +222,93 @@ function setLoop() { //Turn on or turn off the video's loop
     setProperties();
 }
 
-function setMiniPlayer() {
+function setMiniScreen() { // Turn in or out in mini screen mode
+    isMiniScreen = miniPlayerImage.getAttribute("miniScreenMode");
+    if (isMiniScreen == "true") {
+        alert("mini true")
+        // Enable the display of some images of the control
+        theaterImage.style.display = "initial";
+        fullScreenImage.style.display = "initial";
+        //change the icon of the mini screen image inside the controls when turn this screen mode in and out
+        miniPlayerImage.src = "./assets/icons/round_fullscreen_exit_black.png"
+        miniPlayerImage.setAttribute("miniScreenMode", false);
 
-}
-
-function setTheater() { // Turn in or out in theater mode
-    let container = document.getElementsByClassName("container")[0];
-    let isTheater = theaterImage.getAttribute("theaterMode");
-
-    if (isTheater == "true") {
-        theaterImage.setAttribute("theaterMode", false);
         container.style.width = "64%";
+        container.style.height = "36vw";
 
-        theaterImage.src = "./assets/icons/round_crop_landscape_black.png"
+    } else if (isMiniScreen == "false") {
+        alert("mini false")
 
-    } else if (isTheater == "false") {
-        theaterImage.setAttribute("theaterMode", true);
+
+        // Disable the display of some images of the control
+        theaterImage.style.display = "none";
+        fullScreenImage.style.display = "none"
+        miniPlayerImage.setAttribute("miniScreenMode", true);
+
         container.style.width = "100%";
-
-        theaterImage.src = "./assets/icons/round_crop_7_5_black.png"
+        container.style.height = "100%";
+        miniPlayerImage.src = "./assets/icons/round_fullscreen_exit_black.png"
     }
 }
 
+function setTheater() { // Turn in or out in theater mode
+    isTheater = theaterImage.getAttribute("theaterMode");
+
+    // If is theater screen...
+    if (isTheater == "true") {
+        // Enable the display of some images of the control
+        miniPlayerImage.style.display = "initial";
+        theaterImage.src = "./assets/icons/round_crop_landscape_black.png"
+
+        theaterImage.setAttribute("theaterMode", false);
+        // Return video to normal size
+        container.style.width = "64%";
+
+    // If isn't theater screen
+    } else if (isTheater == "false") {
+        // Disable the display of some images of the control
+        miniPlayerImage.style.display = "none";
+        theaterImage.src = "./assets/icons/round_crop_7_5_black.png"
+
+        theaterImage.setAttribute("theaterMode", true);
+        // Make video to fill total width of the window
+        container.style.width = "100%";
+
+    }
+    // Redefine de variable's value after has changed
+    isTheater = theaterImage.getAttribute("theaterMode");
+}
+
 function setFullScreen() { // Turn in or out in full screen mode
-    let container = document.getElementsByClassName("container")[0];
-    let fullScreenImage = document.getElementById("full_screen");
-    let isFullScreen = fullScreenImage.getAttribute("fullScreenMode");
-    let miniPlayerImage = document.getElementsByClassName("mini-player")[0];
-
+    isFullScreen = fullScreenImage.getAttribute("fullScreenMode");
+    // If is full screen...
     if (isFullScreen == "true") {
-
+        // Enable the display of some images of the control
         miniPlayerImage.style.display = "initial";
         theaterImage.style.display = "initial";
-        fullScreenImage.setAttribute("fullScreenMode", false);
-        container.style.width = "64%";
-        container.style.height = "36vw";
         fullScreenImage.src = "./assets/icons/round_fullscreen_exit_black.png"
 
+        fullScreenImage.setAttribute("fullScreenMode", false);
+        // Return video to normal size
+        container.style.width = "64%";
+        container.style.height = "36vw";
+
+        // If isn't full screen...
     } else if (isFullScreen == "false") {
-        let isTheater = theaterImage.getAttribute("theaterMode");
-        if (isMiniPlayer == "true") {
+        // If is theater screen...        
+        if (isTheater == "true") { // Exit theater screen mode and reset theater screen control image
             theaterImage.setAttribute("theaterMode", false);
             theaterImage.src = "./assets/icons/round_crop_landscape_black.png"
         }
-        
-        if (isTheater == "true") {
-            theaterImage.setAttribute("theaterMode", false);
-            theaterImage.src = "./assets/icons/round_crop_landscape_black.png"
-        }
-        
+
+        // Disable the display of some images of the control
         miniPlayerImage.style.display = "none";
         theaterImage.style.display = "none";
+        fullScreenImage.src = "./assets/icons/round_fullscreen_exit_black.png"
+
         fullScreenImage.setAttribute("fullScreenMode", true);
+        // Make video to fill the window
         container.style.width = "100%";
         container.style.height = "100%";
-        fullScreenImage.src = "./assets/icons/round_fullscreen_exit_black.png"
     }
 }
