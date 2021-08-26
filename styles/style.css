@@ -1,4 +1,4 @@
-*:not(body){
+*{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -6,12 +6,17 @@
 
 body, html{
     height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
 }
-.container{
+
+.video-container{
+    min-width: 400px;
     width: 64%;
     height: 36vw;
-
+    
     position: relative;
+    right: 0%;
+    bottom: 0px;
 }
 
 #video{
@@ -32,9 +37,10 @@ img{
     height: fit-content;
     
     position: absolute;
-    opacity: 100%;
     top: 100%;
     transform: translateY(-100%);
+    opacity: 0%;
+    transition: opacity 0.3s;
 }
 
 #progress_bar{
@@ -44,6 +50,50 @@ img{
 .left-controls{
     display: inline-block;
     height:fit-content;
+}
+
+.tooltip{
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltip-text{
+    background-color: #333;
+    color: #fff;
+    
+    white-space: nowrap;
+    position: absolute;
+    
+    bottom: 170%;
+    left: 50%;
+    margin-left: -30px;
+
+
+    border-radius: 1px;
+    padding: 4px;
+    text-align: center;
+    font-size: small;
+    z-index: 1;
+
+    /* visibility: hidden; */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip .play{
+    margin-left: -10px;
+}
+
+.tooltip .mini-screen{
+    left: 0%;
+}
+
+.tooltip .theater-screen{
+    margin-left: -60px;
+}
+
+.tooltip .full-screen{
+    left: -100%;
 }
 
 .volume-slider{
@@ -72,21 +122,6 @@ img{
     right: 0;
 }
 
-/* Hovers */
-.container:hover .controls{
-    cursor: pointer;
-    opacity: 30%;
-}
-
-img:hover{
-    cursor: pointer;
-}
-
-.volume-slider:hover{
-    cursor: pointer;
-}
-
-
 .properties{
     background-color: #DDD;
     border: 1px solid;
@@ -98,4 +133,25 @@ img:hover{
 .properties h3{
     text-align: center;
     padding-bottom: 10px;
+}
+
+
+
+/* Hovers */
+.video-container:hover .controls{
+    cursor: pointer;
+    opacity: 40%;
+}
+
+img:hover{
+    cursor: pointer;
+}
+
+.volume-slider:hover{
+    cursor: pointer;
+}
+
+.tooltip:hover .tooltip-text{
+    visibility: visible;
+    opacity: 100%;
 }
