@@ -1,5 +1,6 @@
 // Global variables
 var container;
+var videoContainer;
 var video;
 var progressBar;
 
@@ -25,6 +26,7 @@ var fullScreenButtonTooltip;
 window.onload = function () {
     //Inicialize the variables
     container = document.getElementsByClassName("video-container")[0];
+    videoContainer = document.getElementsByClassName("video-container")[0];
     video = document.getElementById("video");
     progressBar = document.getElementById("progress_bar");
     progressBar.value = video.currentTime;
@@ -253,6 +255,18 @@ function returnToNormalScreen() { // Return any screen mode to the normal one
         theaterScreenMode == "true" ||
         fullScreenMode == "true") {
 
+        // Return video to normal size
+        container.style.width = "64%";
+        container.style.height = "36vw";
+        container.style.position = "relative";
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) { // Safari
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) { // IE11
+            document.msExitFullscreen()
+        }
+
         // Disable every screen mode 
         miniPlayerButton.setAttribute("miniScreenMode", false);
         theaterButton.setAttribute("theaterScreenMode", false);
@@ -282,11 +296,6 @@ function returnToNormalScreen() { // Return any screen mode to the normal one
         miniPlayerButtonTooltip.style.left = "0%";
         theaterButtonTooltip.style.left = "-60%";
         fullScreenButtonTooltip.style.left = "-110%";
-
-        // Return video to normal size
-        container.style.width = "64%";
-        container.style.height = "36vw";
-        container.style.position = "relative";
     }
 }
 
@@ -367,8 +376,13 @@ function setFullScreen() { // Turn in or out in full screen mode
 
             fullScreenButton.setAttribute("fullScreenMode", true);
             // Make video to fill the window
-            container.style.width = "100%";
-            container.style.height = "100%";
+            if (videoContainer.requestFullscreen) {
+                videoContainer.requestFullscreen();
+            } else if (videoContainer.webkitRequestFullscreen) { // Safari
+                videoContainer.webkitRequestFullscreen();
+            } else if (videoContainer.msRequestFullscreen) { // IE11
+                videoContainer.msRequestFullscreen()
+            }
         }
     }
 }
