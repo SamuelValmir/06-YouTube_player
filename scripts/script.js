@@ -1,11 +1,14 @@
-var defaultScreen = 16 / 9;
+// Global variables
+var container;
 var video;
-var volumeSlider;
-var loopButton;
 var progressBar;
+
+// Left controls
+var volumeSlider;
 var muteButton;
 
-var container;
+// Right controls
+var loopButton;
 
 var miniPlayerButton;
 var isMiniPlayer;
@@ -21,23 +24,25 @@ var fullScreenButtonTooltip;
 
 window.onload = function () {
     //Inicialize the variables
+    container = document.getElementsByClassName("video-container")[0];
     video = document.getElementById("video");
-    volumeSlider = document.getElementsByClassName("volume-slider")[0];
-    loopButton = document.getElementById("loop_button");
     progressBar = document.getElementById("progress_bar");
     progressBar.value = video.currentTime;
     progressBar.max = video.duration;
 
+    // Left controls
+    volumeSlider = document.getElementsByClassName("volume-slider")[0];
     muteButton = document.getElementById("mute_button");
 
-    container = document.getElementsByClassName("video-container")[0];
+    // Right controls
+    loopButton = document.getElementById("loop_button");
 
     miniPlayerButton = document.getElementsByClassName("mini-player")[0];
     isMiniPlayer = miniPlayerButton.getAttribute("miniScreenMone");
     miniPlayerButtonTooltip = document.querySelector(".mini-player + span");
 
     theaterButton = document.getElementById("theater_button");
-    isTheater = theaterButton.getAttribute("theaterMode");
+    isTheater = theaterButton.getAttribute("theaterScreenMode");
     theaterButtonTooltip = document.querySelector("#theater_button + span");
 
     fullScreenButton = document.getElementById("full_screen_button");
@@ -47,8 +52,7 @@ window.onload = function () {
     setProperties();
 }
 
-// On video loaded format and set a value for the duration time span tag
-function onVideoLoad() {
+function onVideoLoad() { // On video loaded format and set a value for the duration time span tag
     let minutes = Math.floor(video.duration / 60);
     let seconds = Math.floor(video.duration % 60);
     if (minutes < 10) { minutes = "0" + minutes; }
@@ -56,7 +60,7 @@ function onVideoLoad() {
     document.getElementsByClassName("duration-time")[0].innerHTML = minutes + ":" + seconds;
 }
 
-function setProperties() { //Fill or change the div properties values
+function setProperties() { // Fill or change the div properties values
     document.getElementById("volume").innerHTML = video.volume;
     document.getElementById("muted").innerHTML = video.muted;
     document.getElementById("loop").innerHTML = video.loop;
@@ -69,18 +73,8 @@ function setProperties() { //Fill or change the div properties values
     } else if (playButtonImageSrc.search("play") > -1) {
         document.getElementById("playing").innerHTML = "false";
     } else {
-        alert("error on muted image")
+        alert("Error on muted image!")
     }
-}
-
-function onProgressSliderInputted() { // Change the video's current time by dragging the progress bar
-    video.currentTime = progressBar.value;
-    setProperties();
-}
-
-function onVolumeSliderInputted() { // Change the video's volume by dragging the volume slider
-    video.volume = volumeSlider.value;
-    setProperties();
 }
 
 function timeupdate() { // While the video is playing show current time 
@@ -104,6 +98,16 @@ function timeupdate() { // While the video is playing show current time
     formattedTimeText = minutes + ":" + seconds;
 
     currentTimeText.innerHTML = formattedTimeText;
+}
+
+function onProgressSliderInputted() { // Change the video's current time by dragging the progress bar
+    video.currentTime = progressBar.value;
+    setProperties();
+}
+
+function onVolumeSliderInputted() { // Change the video's volume by dragging the volume slider
+    video.volume = volumeSlider.value;
+    setProperties();
 }
 
 function playVideo() { //Play or pause the video
@@ -134,7 +138,7 @@ function muteVideo() { // Mutes or un-mutes the volume
             video.volume = 1;
             setVolumeImage();
             video.muted = false;
-            return
+            return;
         }
         setVolumeImage();
         video.muted = false;
@@ -192,11 +196,13 @@ function setVolumeRangeByVolumeMuted(isVideoMuted) {
 
 window.onkeydown = function () { //Depending to which key was pressed down, it'll control different properties of the video.
     const keyDown = event.keyCode;
-    //alert(keyDown)
     switch (keyDown) {
+        // Keys responsible for the left controls
         case 32: playVideo(); // Case "K" is pressed
             break;
         case 75: playVideo(); // Case Space bar is pressed
+            break;
+        case 77: muteVideo(); // Case "M" is pressed
             break;
         case 37: video.currentTime -= 5; // Case Arrow left is pressed
             break;
@@ -206,13 +212,19 @@ window.onkeydown = function () { //Depending to which key was pressed down, it'l
             break;
         case 40: adjustVolume("down"); // Case Arrow down is pressed
             break;
+
+        // Keys responsible for the right controls
         case 65: setLoop(); // Case "A" is pressed
+            break;
+        case 83: ; // Case "s" is pressed;
+            break;
+        case 73: setMiniPlayer(); // Case "i" is pressed
+            break;
+        case 84: setTheater(); // Case "t" is pressed
             break;
         case 70: setFullScreen(); // Case "F" is pressed
             break;
-        case 77: muteVideo(); // Case "M" is pressed
-            break;
-        case 27: // Case "Esc" is pressed
+        case 27: returnToNormalScreen();// Case "Esc" is pressed
             break;
     }
 };
@@ -232,109 +244,131 @@ function setLoop() { //Turn on or turn off the video's loop
     setProperties();
 }
 
-function setMiniPlayer() { // Turn in or out in mini screen mode
-    isMiniPlayer = miniPlayerButton.getAttribute("miniScreenMode");
-    if (isMiniPlayer == "true") {
-        miniPlayerButtonTooltip.innerHTML = "Mini player (i)";
-        miniPlayerButtonTooltip.style.left = "0%";
-        // Enable the display of some images of the control
+function returnToNormalScreen() { // Return any screen mode to the normal one
+    let miniScreenMode = miniPlayerButton.getAttribute("miniScreenMode");
+    let theaterScreenMode = theaterButton.getAttribute("theaterScreenMode");
+    let fullScreenMode = fullScreenButton.getAttribute("fullScreenMode");
+
+    if (miniScreenMode == "true" ||
+        theaterScreenMode == "true" ||
+        fullScreenMode == "true") {
+
+        // Disable every screen mode 
+        miniPlayerButton.setAttribute("miniScreenMode", false);
+        theaterButton.setAttribute("theaterScreenMode", false);
+        fullScreenButton.setAttribute("fullScreenMode", false);
+
+        // Enable the display of the images of the control
+        miniPlayerButton.style.display = "initial";
         theaterButton.style.display = "initial";
-        theaterButtonTooltip.style.display = "initial";
         fullScreenButton.style.display = "initial";
+
+        // Enable the display of the tooltips
+        miniPlayerButtonTooltip.style.display = "initial";
+        theaterButtonTooltip.style.display = "initial";
         fullScreenButtonTooltip.style.display = "initial";
 
-        miniPlayerButton.src = "./assets/icons/round_branding_watermark_black.png"
-        miniPlayerButton.setAttribute("miniScreenMode", false);
-        // Make video float on screen
-        container.style.position = "relative";
+        // Change the text of the tooltips
+        miniPlayerButtonTooltip.innerHTML = "Mini player (i)";
+        theaterButtonTooltip.innerHTML = "Theater mode (t)";
+        fullScreenButtonTooltip.innerHTML = "Full screen (f)";
 
-    } else if (isMiniPlayer == "false") {
-        miniPlayerButtonTooltip.innerHTML = "Exit mini player (i)";
-        miniPlayerButtonTooltip.style.left = "-160%";
-        // Disable the display of some images of the control
-        theaterButton.style.display = "none";
-        theaterButtonTooltip.style.display = "none";
-        fullScreenButton.style.display = "none"
-        fullScreenButtonTooltip.style.display = "none";
-        miniPlayerButton.src = "./assets/icons/round_featured_video_black.png"
-        miniPlayerButton.setAttribute("miniScreenMode", true);
-        // Return video to normal location
-        container.style.position = "absolute";
+        // Change the image of the controls
+        miniPlayerButton.src = "./assets/icons/round_branding_watermark_black.png";
+        theaterButton.src = "./assets/icons/round_crop_landscape_black.png";
+        fullScreenButton.src = "./assets/icons/round_fullscreen_exit_black.png";
+
+        // Change the position of the tooltips
+        miniPlayerButtonTooltip.style.left = "0%";
+        theaterButtonTooltip.style.left = "-60%";
+        fullScreenButtonTooltip.style.left = "-110%";
+
+        // Return video to normal size
+        container.style.width = "64%";
+        container.style.height = "36vw";
+        container.style.position = "relative";
+    }
+}
+
+function setMiniPlayer() { // Turn in or out in mini screen mode
+    if (theaterButton.getAttribute("theaterScreenMode") == "false" && fullScreenButton.getAttribute("fullScreenMode") == "false") {
+        isMiniPlayer = miniPlayerButton.getAttribute("miniScreenMode");
+        if (isMiniPlayer == "true") {
+            returnToNormalScreen();
+
+        } else if (isMiniPlayer == "false") {
+            miniPlayerButtonTooltip.innerHTML = "Exit mini player (i)";
+            miniPlayerButtonTooltip.style.left = "-160%";
+            // Disable the display of some images of the control
+            theaterButton.style.display = "none";
+            theaterButtonTooltip.style.display = "none";
+            fullScreenButton.style.display = "none";
+            fullScreenButtonTooltip.style.display = "none";
+            miniPlayerButton.src = "./assets/icons/round_featured_video_black.png"
+            miniPlayerButton.setAttribute("miniScreenMode", true);
+            // Return video to normal location
+            container.style.position = "absolute";
+        }
     }
 }
 
 function setTheater() { // Turn in or out in theater mode
-    isTheater = theaterButton.getAttribute("theaterMode");
+    if (fullScreenButton.getAttribute("fullScreenMode") == "false" && miniPlayerButton.getAttribute("miniScreenMode") == "false") {
+        isTheater = theaterButton.getAttribute("theaterScreenMode");
 
-    // If is theater screen...
-    if (isTheater == "true") {
-        theaterButtonTooltip.innerHTML = "Theater mode (t)";
-        // Enable the display of some images of the control and it's tooltip
-        miniPlayerButton.style.display = "initial";
-        miniPlayerButtonTooltip.style.display = "initial";
-        theaterButton.src = "./assets/icons/round_crop_landscape_black.png"
+        // If is theater screen...
+        if (isTheater == "true") {
+            returnToNormalScreen();
 
-        theaterButton.setAttribute("theaterMode", false);
-        // Return video to normal size
-        container.style.width = "64%";
+            // If isn't theater screen
+        } else if (isTheater == "false") {
+            theaterButtonTooltip.innerHTML = "Default visualization (t)";
+            // Disable the display of some images of the control and it's tooltip
+            miniPlayerButton.style.display = "none";
+            miniPlayerButtonTooltip.style.display = "none";
 
-        // If isn't theater screen
-    } else if (isTheater == "false") {
-        theaterButtonTooltip.innerHTML = "Default visualization (t)";
-        // Disable the display of some images of the control and it's tooltip
-        miniPlayerButton.style.display = "none";
-        miniPlayerButtonTooltip.style.display = "none";
+            theaterButton.src = "./assets/icons/round_crop_7_5_black.png";
 
-        theaterButton.src = "./assets/icons/round_crop_7_5_black.png"
+            theaterButton.setAttribute("theaterScreenMode", true);
+            // Make video to fill total width of the window
+            container.style.width = "100%";
 
-        theaterButton.setAttribute("theaterMode", true);
-        // Make video to fill total width of the window
-        container.style.width = "100%";
-
+        }
+        // Redefine de variable's value after has changed
+        isTheater = theaterButton.getAttribute("theaterScreenMode");
     }
-    // Redefine de variable's value after has changed
-    isTheater = theaterButton.getAttribute("theaterMode");
 }
 
 function setFullScreen() { // Turn in or out in full screen mode
-    isFullScreen = fullScreenButton.getAttribute("fullScreenMode");
+    // This conditional don't allow to turn full screen if is already in mini screen
+    if (miniPlayerButton.getAttribute("miniScreenMode") == "false") {
+        isFullScreen = fullScreenButton.getAttribute("fullScreenMode");
 
-    // If is full screen...
-    if (isFullScreen == "true") {
-        fullScreenButtonTooltip.style.left = "100%";
-        fullScreenButtonTooltip.innerHTML = "Full screen (f)";
-        // Enable the display of some images of the control and it's tooltip
-        miniPlayerButton.style.display = "initial";
-        miniPlayerButtonTooltip.style.display = "initial";
-        theaterButton.style.display = "initial";
-        theaterButtonTooltip.style.display = "initial";
-        fullScreenButton.src = "./assets/icons/round_fullscreen_exit_black.png"
+        // If is full screen...
+        if (isFullScreen == "true") {
+            returnToNormalScreen();
 
-        fullScreenButton.setAttribute("fullScreenMode", false);
-        // Return video to normal size
-        container.style.width = "64%";
-        container.style.height = "36vw";
+            // If isn't full screen...
+        } else if (isFullScreen == "false") {
+            fullScreenButtonTooltip.style.left = "-180%";
+            fullScreenButtonTooltip.innerHTML = "Exit full screen (f)";
+            // If is theater screen...        
+            if (isTheater == "true") { // Exit theater screen mode and reset theater screen control image
+                theaterButton.setAttribute("theaterScreenMode", false);
+                theaterButton.src = "./assets/icons/round_crop_landscape_black.png";
+            }
 
-        // If isn't full screen...
-    } else if (isFullScreen == "false") {
-        fullScreenButtonTooltip.style.left = "-180%";
-        fullScreenButtonTooltip.innerHTML = "Exit full screen (f)";
-        // If is theater screen...        
-        if (isTheater == "true") { // Exit theater screen mode and reset theater screen control image
-            theaterButton.setAttribute("theaterMode", false);
-            theaterButton.src = "./assets/icons/round_crop_landscape_black.png"
+            // Disable the display of some images of the control  and it's tooltip
+            miniPlayerButton.style.display = "none";
+            miniPlayerButtonTooltip.style.display = "none";
+            theaterButton.style.display = "none";
+            theaterButtonTooltip.style.display = "none";
+            fullScreenButton.src = "./assets/icons/round_fullscreen_exit_black.png";
+
+            fullScreenButton.setAttribute("fullScreenMode", true);
+            // Make video to fill the window
+            container.style.width = "100%";
+            container.style.height = "100%";
         }
-
-        // Disable the display of some images of the control  and it's tooltip
-        miniPlayerButton.style.display = "none";
-        miniPlayerButtonTooltip.style.display = "none";
-        theaterButton.style.display = "none";
-        theaterButtonTooltip.style.display = "none";
-        fullScreenButton.src = "./assets/icons/round_fullscreen_exit_black.png"
-
-        fullScreenButton.setAttribute("fullScreenMode", true);
-        // Make video to fill the window
-        container.style.width = "100%";
-        container.style.height = "100%";
     }
 }
