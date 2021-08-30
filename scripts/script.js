@@ -51,15 +51,19 @@ window.onload = function () {
     isFullScreen = fullScreenButton.getAttribute("fullScreenMode");
     fullScreenButtonTooltip = document.querySelector("#full_screen_button + span");
 
-    setProperties();
-}
+    function videoOnload() {
+        // On video loaded format and set a value for the duration time span tag
+        let minutes = Math.floor(video.duration / 60);
+        let seconds = Math.floor(video.duration % 60);
+        if (minutes < 10) { minutes = "0" + minutes; }
+        if (seconds < 10) { seconds = "0" + seconds; }
+        document.getElementsByClassName("duration-time")[0].innerHTML = minutes + ":" + seconds;
+    }
 
-function onVideoLoad() { // On video loaded format and set a value for the duration time span tag
-    let minutes = Math.floor(video.duration / 60);
-    let seconds = Math.floor(video.duration % 60);
-    if (minutes < 10) { minutes = "0" + minutes; }
-    if (seconds < 10) { seconds = "0" + seconds; }
-    document.getElementsByClassName("duration-time")[0].innerHTML = minutes + ":" + seconds;
+    video.addEventListener("load", videoOnload);
+
+    setProperties();
+
 }
 
 function setProperties() { // Fill or change the div properties values
@@ -255,18 +259,6 @@ function returnToNormalScreen() { // Return any screen mode to the normal one
         theaterScreenMode == "true" ||
         fullScreenMode == "true") {
 
-        // Return video to normal size
-        container.style.width = "64%";
-        container.style.height = "36vw";
-        container.style.position = "relative";
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) { // Safari
-            document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) { // IE11
-            document.msExitFullscreen()
-        }
-
         // Disable every screen mode 
         miniPlayerButton.setAttribute("miniScreenMode", false);
         theaterButton.setAttribute("theaterScreenMode", false);
@@ -296,6 +288,22 @@ function returnToNormalScreen() { // Return any screen mode to the normal one
         miniPlayerButtonTooltip.style.left = "0%";
         theaterButtonTooltip.style.left = "-60%";
         fullScreenButtonTooltip.style.left = "-110%";
+
+        // Is occurring an error. The images simply fades away when the full screen is closed with "esc"
+        // Return video to normal size
+        container.style.width = "64%";
+        container.style.height = "36vw";
+        container.style.position = "relative";
+
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) { // Safari
+            document.webkitExitFullscreen();
+        }else if (document.mozCancelFullScreen){
+            document.mozCancelFullScreen();        
+        } else if (document.msExitFullscreen) { // IE11
+            document.msExitFullscreen()
+        }
     }
 }
 
@@ -375,6 +383,7 @@ function setFullScreen() { // Turn in or out in full screen mode
             fullScreenButton.src = "./assets/icons/round_fullscreen_exit_black.png";
 
             fullScreenButton.setAttribute("fullScreenMode", true);
+
             // Make video to fill the window
             if (videoContainer.requestFullscreen) {
                 videoContainer.requestFullscreen();
